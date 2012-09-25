@@ -7,25 +7,24 @@ var angleHorizont = 0;
 var v3Direction : Vector3;
 
 function Start () {
-	transform.rigidbody.velocity = Vector3(0, 0, speed);
+	v3Direction = Vector3(0, 0, speed);
 }
 
 function FixedUpdate () {
-	var h = Input.GetAxisRaw("Horizontal");
-	var v = Input.GetAxisRaw("Vertical");
-	
-	//move bullet
-	//transform.Translate(Vector3(0,0,speed) * Time.deltaTime);
-	
-	//rotate bullet
-	angleHorizont += h;
-	angleVertical -= v;
-	
-	//Debug.Log(transform.rotation.eulerAngles);
-	transform.rotation = Quaternion.Euler(angleVertical, angleHorizont, 0);
-	//чтобы повернуть вектор на определенный угол вокруг заданной оси достаточно умножить кватернион вращения на этот вектор
-	rigidbody.velocity = Quaternion.Euler(-v, h, 0) * rigidbody.velocity;
-	
+ 
+  var h = Input.GetAxisRaw("Horizontal");
+  var v = Input.GetAxisRaw("Vertical");
+  
+  //rotate bullet
+  angleHorizont += h;
+  angleVertical -= v;
+  
+  var targetQ : Quaternion = Quaternion.Euler(angleVertical, angleHorizont, 0);
+  var smooth = 10; // скорость поворота градусов в секунду
+  transform.rotation = Quaternion.Slerp(transform.rotation, targetQ, Time.deltaTime * smooth);
+
+  //move bullet
+  transform.Translate(v3Direction * Time.deltaTime);
 }
 
 function OnCollisionEnter(collision : Collision) {
@@ -33,9 +32,15 @@ function OnCollisionEnter(collision : Collision) {
     for (var contact : ContactPoint in collision.contacts) {
         Debug.DrawRay(contact.point, contact.normal, Color.white, 2, true);
     }
-        
-    rigidbody.velocity = Vector3.Reflect(rigidbody.velocity, collision.contacts[0].normal);
-    transform.rotation = Quaternion.LookRotation(rigidbody.velocity);
+    
+    //transform local direction to world coordinates
+	var v3DirectionW = transform.TransformDirection(v3Direction);
+    
+    //reflect world direction from wall normal
+    v3DirectionW = Vector3.Reflect(v3DirectionW, collision.contacts[0].normal);
+    
+    transform.rotation = Quaternion.LookRotation(v3DirectionW);
+    
     angleHorizont = transform.rotation.eulerAngles.y;
     angleVertical = transform.rotation.eulerAngles.x;
 }
