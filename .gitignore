@@ -1,3 +1,8 @@
 #unity
 Library
 Temp
+
+#build files
+*.exe
+*_Data/
+*.apk

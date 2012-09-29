@@ -5,15 +5,23 @@ var speed : float = 3.0;
 var angleVertical = 0;
 var angleHorizont = 0;
 var v3Direction : Vector3;
+var gvnbfr : GameObject;
 
 function Start () {
 	v3Direction = Vector3(0, 0, speed);
+	gvnbfr = GameObject.Find("govnoBuffer");
 }
 
 function FixedUpdate () {
- 
-  var h = Input.GetAxisRaw("Horizontal");
-  var v = Input.GetAxisRaw("Vertical");
+  var h : int;
+  var v : int;
+#if UNITY_IPHONE || UNITY_ANDROID
+  h = ((gvnbfr.transform.position.x>=0) ? ((gvnbfr.transform.position.x==0) ? 0 : 1) : -1);
+  v = ((gvnbfr.transform.position.y>=0) ? ((gvnbfr.transform.position.y==0) ? 0 : 1) : -1);
+#else
+  h = Input.GetAxisRaw("Horizontal");
+  v = Input.GetAxisRaw("Vertical");
+#endif
   
   //rotate bullet
   angleHorizont += h;

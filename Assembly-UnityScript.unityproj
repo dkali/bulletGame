@@ -44,6 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\Joystick.js" />
      <Compile Include="Assets\scripts\BulletKeyHandler.js" />
      <Compile Include="Assets\scripts\followCamera.js" />
   </ItemGroup>
