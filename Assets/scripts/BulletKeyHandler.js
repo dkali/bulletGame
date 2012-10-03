@@ -13,8 +13,19 @@ function Start () {
 }
 
 function FixedUpdate () {
-  var h : int;
-  var v : int;
+  var h : int = 0;
+  var v : int = 0;
+
+  //get input from wasd
+  h = Input.GetAxisRaw("Horizontal");
+  v = Input.GetAxisRaw("Vertical");
+   
+  if ( h == 0 && v == 0 ){
+  	//if no wasd was used, get input from joystick
+	h = ((gvnbfr.transform.position.x>=0) ? ((gvnbfr.transform.position.x==0) ? 0 : 1) : -1);
+  	v = ((gvnbfr.transform.position.y>=0) ? ((gvnbfr.transform.position.y==0) ? 0 : 1) : -1);
+  }
+/*
 #if UNITY_IPHONE || UNITY_ANDROID
   h = ((gvnbfr.transform.position.x>=0) ? ((gvnbfr.transform.position.x==0) ? 0 : 1) : -1);
   v = ((gvnbfr.transform.position.y>=0) ? ((gvnbfr.transform.position.y==0) ? 0 : 1) : -1);
@@ -22,6 +33,8 @@ function FixedUpdate () {
   h = Input.GetAxisRaw("Horizontal");
   v = Input.GetAxisRaw("Vertical");
 #endif
+ */
+
   
   //rotate bullet
   angleHorizont += h;
